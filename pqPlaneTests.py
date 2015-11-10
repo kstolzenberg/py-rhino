@@ -3,13 +3,11 @@
 import rhinoscriptsyntax as rs
 import pprint # print pretty for lists
 
-#corners = rs.GetObjects("select corners")
-#rs.AddSrfPt(corners)
-# THIS WORKS!!! :)
-# DOES ORDER MATTER? YES OTHERWISE IT WILL TWIST. YOU JUST HAVE TO GO CLOCKWISE OR COUNTERCLOSCKWISE. NO CORNERS.
-# WE NEED A WAY TO ORDER THE CORNERS SO THAT THINGS ARE NEXT TO EACH OTHER!
+# corners = rs.GetObjects("select corners")
+# rs.AddSrfPt(corners)
+# THIS BASE CASE WORKS! ORDER MATTERS - YOU JUST HAVE TO GO CLOCKWISE OR COUNTER, NO OPPOSITES
 
-# need to loop and serialize this for all points, not just two points!!!
+# need to loop and serialize this for all curves and all points, not just two points!!!
 crvs = rs.GetObjects("pick 2 curves to intersect")
 
 # note this spits back a list of info, first = type of intersect then points
