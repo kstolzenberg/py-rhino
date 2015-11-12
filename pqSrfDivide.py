@@ -47,7 +47,11 @@ allCrvZip = zip(uDomAll, vDomAll)
 for i in range(len(allCrvZip)):
     #allCrvs.append(rs.ExtractIsoCurve(newSrf, allCrvZip[i], 2))
     allCrvsU.append(rs.ExtractIsoCurve(newSrf, allCrvZip[i], 0))
-    
+
+# it doesn't look this output is ordered by adjacency...they are opposite! is possible to sort by uv curves?   
+#rs.SelectObject(allCrvs[2][0])
+#rs.SelectObject(allCrvs[2][1])
+
 for i in range(len(allCrvZip)):
     allCrvsV.append(rs.ExtractIsoCurve(newSrf, allCrvZip[i], 1))
 
@@ -60,9 +64,6 @@ rs.SelectObject(allCrvsU[2])
 rs.SelectObject(allCrvsV[10])
 rs.SelectObject(allCrvsV[9])
 
-# it doesn't look this output is ordered by adjacency...they are opposite! is possible to sort by uv curves?   
-#rs.SelectObject(allCrvs[2][0])
-#rs.SelectObject(allCrvs[2][1])
 
 #    intersectResult = rs.CurveCurveIntersection(crvs[i], crvs[i+1])
 #    pprint.pprint intersectResult
