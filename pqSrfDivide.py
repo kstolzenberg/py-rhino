@@ -11,7 +11,7 @@ Vdom = rs.SurfaceDomain(newSrf, 1)
 dom = (Udom[1], Vdom[1])
 # print dom
 
-divisor = 20
+divisor = 25
 uDomAll = []
 vDomAll = []
 allCrvs = []
@@ -57,12 +57,21 @@ for i in range(len(allCrvZip)):
 
 # why does the isocurve list have an empty tuple at the end and at the beginging? those aren't present in the uv pairs
 # note the origins are opposite? what if you reverse the list.....reversing doesn't help... how to find the similar ones?
-# allCrvsV[::-1]
-print len(allCrvsU)
+
 rs.SelectObject(allCrvsU[1])
-rs.SelectObject(allCrvsU[2])
-rs.SelectObject(allCrvsV[10])
-rs.SelectObject(allCrvsV[9])
+rs.SelectObject(allCrvsV[2])
+
+#'''double your density. throw out everyther U and V curve. 
+#'''double for loop. iterate over each in each direction
+#get list of arc radius all u or v
+
+lengths = []
+for i in range(1, len(allCrvsU)-1):
+    lengths.append(rs.CurveLength(allCrvsU[i]))
+
+print lengths
+
+
 
 
 #    intersectResult = rs.CurveCurveIntersection(crvs[i], crvs[i+1])

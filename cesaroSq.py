@@ -9,6 +9,7 @@ def cesaro(order, size):
     global plane
     if order == 0:
        rs.AddRectangle(plane,2, size) 
+       
     else:
         cesaro(order - 1, size / 3)
         #draw.right(80) these are degrees
