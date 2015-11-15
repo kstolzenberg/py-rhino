@@ -1,4 +1,5 @@
 # build a model of planar quads from a surface
+# eventually roll this into a function that can be run separately for the U and V direction...very parallel!
 
 import rhinoscriptsyntax as rs
 import pprint
@@ -9,14 +10,15 @@ newSrf = rs.GetObject("pick ur start")
 Udom = rs.SurfaceDomain(newSrf, 0)
 Vdom = rs.SurfaceDomain(newSrf, 1)
 dom = (Udom[1], Vdom[1])
-# print dom
 
-divisor = 25
+divisor = 10
 uDomAll = []
 vDomAll = []
-allCrvs = []
+#allCrvs = []
 allCrvsU = []
 allCrvsV = []
+adjCrvsV = []
+adjCrvsU = []
 
 
 # divide domain by an increment
@@ -34,43 +36,32 @@ divideDomain(Vdom, divisor, vDomAll)
 
 # create UV tuples from U & V divided domain - note this is ordered!
 allCrvZip = zip(uDomAll, vDomAll)
-# print allCrvZip # note this is ordered from smallest to largest
-
-# this is a point on the untrimmed surace - off our surface? :<
-#test = rs.EvaluateSurface(newSrf, allCrvZip[1][0], allCrvZip[1][1])
-#newpt = rs.AddPoint(test)
-#rs.SelectObject(newpt)
 
 # extract isocurves per domain increment, increment and draw point?
-# maybe better to extract all in one direction, then all in the other, then can iterate over? these are now in selectable order.
-# for this assignment would be helpful to go from u/v curves lists to panels as a  module.
 for i in range(len(allCrvZip)):
-    #allCrvs.append(rs.ExtractIsoCurve(newSrf, allCrvZip[i], 2))
     allCrvsU.append(rs.ExtractIsoCurve(newSrf, allCrvZip[i], 0))
-
-# it doesn't look this output is ordered by adjacency...they are opposite! is possible to sort by uv curves?   
-#rs.SelectObject(allCrvs[2][0])
-#rs.SelectObject(allCrvs[2][1])
 
 for i in range(len(allCrvZip)):
     allCrvsV.append(rs.ExtractIsoCurve(newSrf, allCrvZip[i], 1))
 
-# why does the isocurve list have an empty tuple at the end and at the beginging? those aren't present in the uv pairs
-# note the origins are opposite? what if you reverse the list.....reversing doesn't help... how to find the similar ones?
-
-rs.SelectObject(allCrvsU[1])
-rs.SelectObject(allCrvsV[2])
-
-#'''double your density. throw out everyther U and V curve. 
-#'''double for loop. iterate over each in each direction
-#get list of arc radius all u or v
-
-lengths = []
+# make a list of adjacent curves pairs in each direction
+for i in range(1, len(allCrvsV)-1):
+    adjCrvsV.append([allCrvsV[i],allCrvsV[i+1]])
+    
 for i in range(1, len(allCrvsU)-1):
-    lengths.append(rs.CurveLength(allCrvsU[i]))
-
-print lengths
-
+    adjCrvsU.append([allCrvsU[i],allCrvsU[i+1]])
+    
+#rs.SelectObjects(adjCrvsV[0])
+        
+# create a new structure checking intersections between curves and adding points to a new data structue
+# but these are pairs not individual curves..may have to reach further down!
+# if they don't intersect...it will just return 'None'
+for i in adjCrvsU:
+    for j in adjCrvsV:
+        try:
+            rs.CurveCurveIntersection(i,j)
+        except():
+            pass         
 
 
 
@@ -82,14 +73,9 @@ print lengths
 #    else:
 #        print "not intersecting"
 
-
 # group all extracted lines
 #edges = rs.DuplicateEdgeCurves(newSrf, False)
 #allCrvs.append(edges)
 #wireGroup = rs.AddGroup()
 #for i in allCrvs:
 #    rs.AddObjectsToGroup(i, wireGroup)
-
-# get all isocurve intersections as points and draw planar surfaces between these points
-# rs.CurveCurveIntersection(allCrv[0],allCrv[1]) # see other method for point from int
-# note allCrvs is a list of GUIDs representing the isocurves. need to order or figure out corner relationships
