@@ -1,5 +1,6 @@
 # Adapted from turtle script NYU CS Course here http://cs.nyu.edu/courses/spring13/CSCI-UA.0002-008/notes/code/cesaro-square.py
 import rhinoscriptsyntax as rs 
+import math
 
 plane = rs.ViewCPlane()
 
@@ -7,6 +8,7 @@ class Turtle():
     def __init__(self):
         #self.position = (0,0,0)
         plane = rs.ViewCPlane()
+        #print plane
         self.position = plane[0]
         #plane needs to relate back to position
         
@@ -14,9 +16,13 @@ class Turtle():
     def forward(self, length):
         start = self.position
         end = (start[0]+length, 0,0)
-        rs.AddLine(start, end)
+        #rs.AddLine(start, end)
+        rs.Line()
         self.position = end
-        
+
+# is there any way to do this without doing the trig? depends on which way you go!
+# x1 = x0 + L*cos(degrees)
+# y1 = y0 + L*sin(degrees)
 
 def cesaro(order, size):  
     global plane

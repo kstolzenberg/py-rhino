@@ -11,7 +11,7 @@ Udom = rs.SurfaceDomain(newSrf, 0)
 Vdom = rs.SurfaceDomain(newSrf, 1)
 dom = (Udom[1], Vdom[1])
 
-divisor = 10
+divisor = 20 # keep this even duh!
 uDomAll = []
 vDomAll = []
 #allCrvs = []
@@ -51,18 +51,30 @@ for i in range(1, len(allCrvsV)-1):
 for i in range(1, len(allCrvsU)-1):
     adjCrvsU.append([allCrvsU[i],allCrvsU[i+1]])
     
-#rs.SelectObjects(adjCrvsV[0])
-        
-# create a new structure checking intersections between curves and adding points to a new data structue
-# but these are pairs not individual curves..may have to reach further down!
-# if they don't intersect...it will just return 'None'
-for i in adjCrvsU:
-    for j in adjCrvsV:
-        try:
-            rs.CurveCurveIntersection(i,j)
-        except():
-            pass         
+#print adjCrvsU[0][0]
 
+for i in range(len(adjCrvsU)):
+    for j in range(len(adjCrvsV)):
+        print "1:",(adjCrvsU[i][0],adjCrvsV[j][0])
+        print "2:" , (adjCrvsU[i][0],adjCrvsV[j][1])
+        print "3:", (adjCrvsU[i][1],adjCrvsV[j][0])
+        print "4:", (adjCrvsU[i][1],adjCrvsV[j][1])
+#        a = rs.CurveCurveIntersection(adjCrvsU[i][0],adjCrvsV[j][0])
+#        b = rs.CurveCurveIntersection(adjCrvsU[i][0],adjCrvsV[j][1])
+#        c = rs.CurveCurveIntersection(adjCrvsU[i][1],adjCrvsV[j][1])
+#        d = rs.CurveCurveIntersection(adjCrvsU[i][1],adjCrvsV[j][0])
+#        
+#        if a and b != None:
+#            print a
+#            print b
+#        
+#        try:
+#            print rs.CurveCurveIntersection(adjCrvsU[i][0],adjCrvsV[j][0])
+#            print rs.CurveCurveIntersection(adjCrvsU[i][0],adjCrvsV[j][1])
+#            print rs.CurveCurveIntersection(adjCrvsU[i][1],adjCrvsV[j][0])
+#            print rs.CurveCurveIntersection(adjCrvsU[i][1],adjCrvsV[j][1])
+#        except:
+#            pass    
 
 
 #    intersectResult = rs.CurveCurveIntersection(crvs[i], crvs[i+1])
