@@ -1,5 +1,6 @@
 import rhinoscriptsyntax as rs
 import pprint
+# note the edges
 
 newSrf = rs.GetObject("pick ur start")
 
@@ -53,6 +54,9 @@ for crv in allCrvsV:
     if crv:
         v_curves.append(crv[0])
 
+#add edge curves
+edges = rs.DuplicateEdgeCurves(newSrf, False)
+#allCrvs.append(edges)
 
 # make a list of adjacent curves pairs in each direction
 for i in range(len(v_curves)-1):
@@ -63,20 +67,40 @@ for i in range(len(u_curves)-1):
                  
                     
 quads = []
-for row in adjCrvsU:
-    for column in adjCrvsV:
+for column in adjCrvsV:
+    
+    column_of_quads = []
+    
+    for row in adjCrvsU:
         a = rs.CurveCurveIntersection(row[0],column[0])
         b = rs.CurveCurveIntersection(row[0],column[1])
         c = rs.CurveCurveIntersection(row[1],column[1])
         d = rs.CurveCurveIntersection(row[1],column[0])
         
         if all([a, b, c, d]):
-            quads.append((a[0][1], b[0][1], c[0][1], d[0][1]))
+            column_of_quads.append((a[0][1], b[0][1], c[0][1], d[0][1]))
+            
+            
+    quads.append(column_of_quads)
 
-for pt in quads[0]:
-    newPt = rs.AddPoint(pt)
-    rs.SelectObject(newPt)
 
-for quad in quads:
-    rs.AddSrfPt(quad)
+srfsToUnroll = []
+for quad_group in quads:
+    surfaces = []
+    for quad in quad_group:
+        surf = rs.AddSrfPt(quad)
+        surfaces.append(surf)
+    srfsToUnroll.append(rs.JoinSurfaces(surfaces))
+    
+for srf in srfsToUnroll:
+    for index, srf in enumerate(srfsToUnroll):
+    # for label use the index
+    # need to group
+    print index
+    rs.UnrollSurface(srf)
+    
+    
 
+# next step = group and unroll according
+# joinSurfaces() 
+# rs.UnrollSurface()
