@@ -1,8 +1,11 @@
+# note this should be rolled into a single function for U / V
+# unrolling not finished, quads next to edges don't get surfaces yet
+# this can be modified for similar methods of panalization!!!! start at the corner points and get weird
+
 import rhinoscriptsyntax as rs
 import pprint
-# note the edges
 
-newSrf = rs.GetObject("pick ur start")
+newSrf = rs.GetObject("pick your start")
 
 # get domain to split
 Udom = rs.SurfaceDomain(newSrf, 0)
@@ -42,11 +45,10 @@ for crv in allCrvZip:
 for crv in allCrvZip:
     allCrvsV.append(rs.ExtractIsoCurve(newSrf, crv, 1))
 
-    
 u_curves = []
 v_curves = []
 
-# cleanup curves
+# flatten curve list from isocruves
 for crv in allCrvsU:
     if crv:
         u_curves.append(crv[0])
@@ -54,9 +56,8 @@ for crv in allCrvsV:
     if crv:
         v_curves.append(crv[0])
 
-#add edge curves
+#add edge curves - note these aren't used yet
 edges = rs.DuplicateEdgeCurves(newSrf, False)
-#allCrvs.append(edges)
 
 # make a list of adjacent curves pairs in each direction
 for i in range(len(v_curves)-1):
@@ -64,12 +65,12 @@ for i in range(len(v_curves)-1):
     
 for i in range(len(u_curves)-1):
     adjCrvsU.append((u_curves[i],u_curves[i+1]))
-                 
-                    
+
 quads = []
+
 for column in adjCrvsV:
     
-    column_of_quads = []
+    column_of_quads = [] # for easy grouping later!
     
     for row in adjCrvsU:
         a = rs.CurveCurveIntersection(row[0],column[0])
@@ -92,15 +93,13 @@ for quad_group in quads:
         surfaces.append(surf)
     srfsToUnroll.append(rs.JoinSurfaces(surfaces))
     
-for srf in srfsToUnroll:
-    for index, srf in enumerate(srfsToUnroll):
-    # for label use the index
-    # need to group
-    print index
-    rs.UnrollSurface(srf)
-    
-    
 
-# next step = group and unroll according
-# joinSurfaces() 
-# rs.UnrollSurface()
+    
+#for srf in srfsToUnroll:
+#    for index, srf in enumerate(srfsToUnroll):
+#    # for label use the index
+#    # need to group
+#    print index
+
+
+# next step = group unroll label extract isocurves!
